@@ -145,7 +145,16 @@ ready(function(){
 
     contractInstance.getIssuersList({from: web3.eth.accounts[0]},function(err,res){
         if(!err) {
-            for (let elem of res) document.getElementById("issuersList").innerHTML += elem + '<br />';
+            for (let elem of res) {
+                elemIssuersList = document.getElementById("issuersList");
+                //elemIssuersList.innerHTML += elem + '<br />';
+                contractInstance.getIssuerName(elem,function(err,res){
+                    if(!err) {
+                        elemIssuersList.innerHTML += res + '(' + String(elem).substring(0,6) + ')' + '<br />';
+                    }
+                    else elemIssuersList.innerHTML += '(' + String(elem).substring(0,6) + ')' + "Error:" + err.message + '<br />';
+                });
+            }
         }
         else {
             console.log(err.message);
