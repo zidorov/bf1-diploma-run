@@ -107,17 +107,17 @@ ready(function(){
         elem.innerHTML = "Please wait...";
         contractInstance.registerIssuer(_issuer,_issuerName,_issuerWebDomain,
             {from: web3.eth.accounts[0]},function(err, res){
-                if(!err) {
-                    onNewIssuerRegistered.watch(function(err2, res2) {
-                        if(!err2) {
-                            elem.innerHTML = "New issuer is registered";
-                            //document.getElementById("yourResult").innerHTML = res2.args["result"];
-                            onNewIssuerRegistered.stopWatching();
-                        }
-                        else elem.innerHTML = "Error:" + err2.message;
+            if(!err) {
+                onNewIssuerRegistered.watch(function(err2, res2) {
+                    if(!err2) {
+                        elem.innerHTML = "New issuer is registered";
+                        //document.getElementById("yourResult").innerHTML = res2.args["result"];
+                        onNewIssuerRegistered.stopWatching();
                     }
-                }
-                else elem.innerHTML = "Error:" + err.message;
+                    else elem.innerHTML = "Error:" + err2.message;
+                });
+            }
+            else elem.innerHTML = "Error:" + err.message;
         });
     }
 
