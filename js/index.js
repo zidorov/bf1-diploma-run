@@ -11,7 +11,11 @@ const contractAddress = "0x492972459d2e766258fe1fe40f87084f26da8f4b"; //rinkeby
 const contractInstance = web3.eth.contract(contractABI).at(contractAddress);
 
 //events
-//var onTaskAnswer = contractInstance.onTaskAnswer();
+let onNewAdminAdded = contractInstance.eNewAdminAdded();
+let onAdminRemoved = contractInstance.eAdminRemoved();
+let onNewIssuerRegistered = contractInstance.eNewIssuerRegistered();
+let onIssuerRemoved = contractInstance.eIssuerRemoved();
+let onNewDiplomaRegistered = contractInstance.eNewDiplomaRegistered();
 
 function ready(callback){
     // in case the document is already rendered
@@ -103,8 +107,17 @@ ready(function(){
         elem.innerHTML = "Please wait...";
         contractInstance.registerIssuer(_issuer,_issuerName,_issuerWebDomain,
             {from: web3.eth.accounts[0]},function(err, res){
-            if(!err) elem.innerHTML = "New issuer is registered";
-            else elem.innerHTML = "Error:" + err.message;
+                if(!err) {
+                    onNewIssuerRegistered.watch(function(err2, res2) {
+                        if(!err2) {
+                            elem.innerHTML = "New issuer is registered";
+                            //document.getElementById("yourResult").innerHTML = res2.args["result"];
+                            onNewIssuerRegistered.stopWatching();
+                        }
+                        else elem.innerHTML = "Error:" + err2.message;
+                    }
+                }
+                else elem.innerHTML = "Error:" + err.message;
         });
     }
 
